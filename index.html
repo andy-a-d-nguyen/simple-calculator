@@ -12,7 +12,7 @@
 		<table class="calculator">
 			<tr>
 				<td colspan="4">
-					<input type="text" disabled />
+					<input type="text" disabled id="result" />
 				</td>
 			</tr>
 			<tr>
@@ -26,7 +26,12 @@
 					<button type="button">%</button>
 				</td>
 				<td>
-					<button type="button">&divide;</button>
+					<button
+						type="button"
+						class="operator-buttons divide-button"
+					>
+						&divide;
+					</button>
 				</td>
 			</tr>
 			<tr>
@@ -40,7 +45,9 @@
 					<button type="button" class="number-buttons">9</button>
 				</td>
 				<td>
-					<button type="button">&times;</button>
+					<button type="button" class="operator-buttons times-button">
+						&times;
+					</button>
 				</td>
 			</tr>
 			<tr>
@@ -54,7 +61,9 @@
 					<button type="button" class="number-buttons">6</button>
 				</td>
 				<td>
-					<button type="button">-</button>
+					<button type="button" class="operator-buttons minus-button">
+						-
+					</button>
 				</td>
 			</tr>
 			<tr>
@@ -68,7 +77,9 @@
 					<button type="button" class="number-buttons">3</button>
 				</td>
 				<td>
-					<button type="button">+</button>
+					<button type="button" class="operator-buttons plus-button">
+						+
+					</button>
 				</td>
 			</tr>
 			<tr>
@@ -77,9 +88,6 @@
 				</td>
 				<td>
 					<button type="button">.</button>
-				</td>
-				<td>
-					<button type="button" id="equals-button">=</button>
 				</td>
 			</tr>
 		</table>
