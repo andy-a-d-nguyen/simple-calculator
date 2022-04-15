@@ -1,7 +1,11 @@
 const display = document.getElementById('result');
 const numberButtons = document.querySelectorAll('.number-buttons');
-const operatorButtons = document.querySelectorAll('.operator-buttons');
-const operatorMatch = /x|\/|\+|-/;
+const timesButton = document.getElementById('times-button');
+const divideButton = document.getElementById('divide-button');
+const plusButton = document.getElementById('plus-button');
+const minusButton = document.getElementById('minus-button');
+const signButton = document.getElementById('sign-button');
+const percentButton = document.getElementById('percent-button');
 let expression = {
 	firstOperand: 0,
 	secondOperand: 0,
@@ -21,7 +25,7 @@ numberButtons.forEach((numberButton) => {
 		} else if (firstNumberClicked && !secondNumberClicked) {
 			expression.secondOperand = parseInt(event.target.innerText);
 			secondNumberClicked = true;
-			display.value += expression.secondOperand;
+			display.value = expression.secondOperand;
 			console.log(`second operand: ${expression.secondOperand}`);
 		}
 
@@ -52,40 +56,66 @@ numberButtons.forEach((numberButton) => {
 	});
 });
 
-operatorButtons.forEach((operatorButton) => {
-	operatorButton.addEventListener('click', () => {
-		if (firstNumberClicked) {
-			if (operatorButton.classList.contains('times-button')) {
-				expression.operator = 'times';
-				if (!operatorClicked) {
-					display.value += 'x';
-				} else {
-					display.value = display.value.replace(operatorMatch, 'x');
-				}
-			} else if (operatorButton.classList.contains('divide-button')) {
-				expression.operator = 'divide';
-				if (!operatorClicked) {
-					display.value += '/';
-				} else {
-					display.value = display.value.replace(operatorMatch, '/');
-				}
-			} else if (operatorButton.classList.contains('plus-button')) {
-				expression.operator = 'plus';
-				if (!operatorClicked) {
-					display.value += '+';
-				} else {
-					display.value = display.value.replace(operatorMatch, '+');
-				}
-			} else {
-				expression.operator = 'minus';
-				if (!operatorClicked) {
-					display.value += '-';
-				} else {
-					display.value = display.value.replace(operatorMatch, '-');
-				}
-			}
-			operatorClicked = true;
-			console.log(expression.operator);
-		}
-	});
+timesButton.addEventListener('click', () => {
+	if (firstNumberClicked) {
+		expression.operator = 'times';
+		timesButton.style['background-color'] = 'orange';
+		divideButton.style['background-color'] = '';
+		plusButton.style['background-color'] = '';
+		minusButton.style['background-color'] = '';
+		operatorClicked = true;
+	}
+});
+
+divideButton.addEventListener('click', () => {
+	if (firstNumberClicked) {
+		expression.operator = 'divide';
+		timesButton.style['background-color'] = '';
+		divideButton.style['background-color'] = 'orange';
+		plusButton.style['background-color'] = '';
+		minusButton.style['background-color'] = '';
+		operatorClicked = true;
+	}
+});
+
+plusButton.addEventListener('click', () => {
+	if (firstNumberClicked) {
+		expression.operator = 'plus';
+		timesButton.style['background-color'] = '';
+		divideButton.style['background-color'] = '';
+		plusButton.style['background-color'] = 'orange';
+		minusButton.style['background-color'] = '';
+		operatorClicked = true;
+	}
+});
+
+minusButton.addEventListener('click', () => {
+	if (firstNumberClicked) {
+		expression.operator = 'minus';
+		timesButton.style['background-color'] = '';
+		divideButton.style['background-color'] = '';
+		plusButton.style['background-color'] = '';
+		minusButton.style['background-color'] = 'orange';
+		operatorClicked = true;
+	}
+});
+
+signButton.addEventListener('click', () => {
+	if (firstNumberClicked) {
+		expression.firstOperand *= -1;
+		display.value = expression.firstOperand;
+	} else if (firstNumberClicked && operatorClicked && secondNumberClicked) {
+		expression.secondOperand *= -1;
+		display.value = expression.secondOperand;
+	}
+});
+
+percentButton.addEventListener('click', () => {
+	if (firstNumberClicked) {
+		expression.firstOperand /= 100;
+		display.value = expression.firstOperand;
+	} else if (firstNumberClicked && operatorClicked && secondNumberClicked) {
+		expression.secondOperand /= 100;
+		display.value = expression.secondOperand;
+	}
 });
