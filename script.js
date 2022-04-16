@@ -6,6 +6,9 @@ const plusButton = document.getElementById('plus-button');
 const minusButton = document.getElementById('minus-button');
 const signButton = document.getElementById('sign-button');
 const percentButton = document.getElementById('percent-button');
+const equalButton = document.getElementById('equal-button');
+const dotButton = document.getElementById('dot-button');
+const previousResult = document.getElementById('previous-result');
 let expression = {
 	firstOperand: 0,
 	secondOperand: 0,
@@ -15,43 +18,28 @@ let expression = {
 let firstNumberClicked = false;
 let secondNumberClicked = false;
 let operatorClicked = false;
+
+window.onload = () => {
+	if (localStorage.getItem('calcResult')) {
+		previousResult.innerText = `The previous result was: ${localStorage.getItem(
+			'calcResult'
+		)}`;
+	}
+};
 numberButtons.forEach((numberButton) => {
 	numberButton.addEventListener('click', (event) => {
 		if (!firstNumberClicked) {
 			expression.firstOperand = parseInt(event.target.innerText);
 			firstNumberClicked = true;
 			display.value = expression.firstOperand;
-			console.log(`first operand: ${expression.firstOperand}`);
-		} else if (firstNumberClicked && !secondNumberClicked) {
+		} else if (
+			firstNumberClicked &&
+			operatorClicked &&
+			!secondNumberClicked
+		) {
 			expression.secondOperand = parseInt(event.target.innerText);
 			secondNumberClicked = true;
 			display.value = expression.secondOperand;
-			console.log(`second operand: ${expression.secondOperand}`);
-		}
-
-		if (firstNumberClicked && secondNumberClicked) {
-			switch (expression.operator) {
-				case 'times':
-					expression.result =
-						expression.firstOperand * expression.secondOperand;
-					break;
-				case 'divide':
-					expression.result =
-						expression.firstOperand / expression.secondOperand;
-					break;
-				case 'plus':
-					expression.result =
-						expression.firstOperand + expression.secondOperand;
-					break;
-				default:
-					expression.result =
-						expression.firstOperand - expression.secondOperand;
-					break;
-			}
-			display.value = expression.result;
-			expression.firstOperand = expression.result;
-			secondNumberClicked = false;
-			console.log(expression.result);
 		}
 	});
 });
@@ -117,5 +105,32 @@ percentButton.addEventListener('click', () => {
 	} else if (firstNumberClicked && operatorClicked && secondNumberClicked) {
 		expression.secondOperand /= 100;
 		display.value = expression.secondOperand;
+	}
+});
+
+equalButton.addEventListener('click', () => {
+	if (firstNumberClicked && operatorClicked && secondNumberClicked) {
+		switch (expression.operator) {
+			case 'times':
+				expression.result =
+					expression.firstOperand * expression.secondOperand;
+				break;
+			case 'divide':
+				expression.result =
+					expression.firstOperand / expression.secondOperand;
+				break;
+			case 'plus':
+				expression.result =
+					expression.firstOperand + expression.secondOperand;
+				break;
+			default:
+				expression.result =
+					expression.firstOperand - expression.secondOperand;
+				break;
+		}
+		display.value = expression.result;
+		expression.firstOperand = expression.result;
+		localStorage.setItem('calcResult', expression.result);
+		secondNumberClicked = false;
 	}
 });
