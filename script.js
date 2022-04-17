@@ -8,12 +8,15 @@ const signButton = document.getElementById('sign-button');
 const percentButton = document.getElementById('percent-button');
 const equalButton = document.getElementById('equal-button');
 const dotButton = document.getElementById('dot-button');
+const clearButton = document.getElementById('clear-button');
 const previousResult = document.getElementById('previous-result');
 let expression = {
 	firstOperand: 0,
 	secondOperand: 0,
 	operator: '',
 	result: 0,
+	firstOperandString: '',
+	secondOperandString: '',
 };
 let firstNumberClicked = false;
 let secondNumberClicked = false;
@@ -28,87 +31,83 @@ window.onload = () => {
 };
 numberButtons.forEach((numberButton) => {
 	numberButton.addEventListener('click', (event) => {
-		if (!firstNumberClicked) {
-			expression.firstOperand = parseInt(event.target.innerText);
-			firstNumberClicked = true;
-			display.value = expression.firstOperand;
-		} else if (
-			firstNumberClicked &&
-			operatorClicked &&
-			!secondNumberClicked
-		) {
-			expression.secondOperand = parseInt(event.target.innerText);
-			secondNumberClicked = true;
-			display.value = expression.secondOperand;
+		if (!operatorClicked) {
+			expression.firstOperandString += event.target.innerText;
+			display.value = expression.firstOperandString;
+		} else {
+			expression.secondOperandString += event.target.innerText;
+			display.value = expression.secondOperandString;
 		}
 	});
 });
 
 timesButton.addEventListener('click', () => {
-	if (firstNumberClicked) {
-		expression.operator = 'times';
-		timesButton.style['background-color'] = 'orange';
-		divideButton.style['background-color'] = '';
-		plusButton.style['background-color'] = '';
-		minusButton.style['background-color'] = '';
-		operatorClicked = true;
-	}
+	firstNumberClicked = true;
+	expression.firstOperand = parseFloat(expression.firstOperandString);
+	expression.operator = 'times';
+	timesButton.style['background-color'] = 'orange';
+	divideButton.style['background-color'] = '';
+	plusButton.style['background-color'] = '';
+	minusButton.style['background-color'] = '';
+	operatorClicked = true;
 });
 
 divideButton.addEventListener('click', () => {
-	if (firstNumberClicked) {
-		expression.operator = 'divide';
-		timesButton.style['background-color'] = '';
-		divideButton.style['background-color'] = 'orange';
-		plusButton.style['background-color'] = '';
-		minusButton.style['background-color'] = '';
-		operatorClicked = true;
-	}
+	firstNumberClicked = true;
+	expression.firstOperand = parseFloat(expression.firstOperandString);
+	expression.operator = 'divide';
+	timesButton.style['background-color'] = '';
+	divideButton.style['background-color'] = 'orange';
+	plusButton.style['background-color'] = '';
+	minusButton.style['background-color'] = '';
+	operatorClicked = true;
 });
 
 plusButton.addEventListener('click', () => {
-	if (firstNumberClicked) {
-		expression.operator = 'plus';
-		timesButton.style['background-color'] = '';
-		divideButton.style['background-color'] = '';
-		plusButton.style['background-color'] = 'orange';
-		minusButton.style['background-color'] = '';
-		operatorClicked = true;
-	}
+	firstNumberClicked = true;
+	expression.firstOperand = parseFloat(expression.firstOperandString);
+	expression.operator = 'plus';
+	timesButton.style['background-color'] = '';
+	divideButton.style['background-color'] = '';
+	plusButton.style['background-color'] = 'orange';
+	minusButton.style['background-color'] = '';
+	operatorClicked = true;
 });
 
 minusButton.addEventListener('click', () => {
-	if (firstNumberClicked) {
-		expression.operator = 'minus';
-		timesButton.style['background-color'] = '';
-		divideButton.style['background-color'] = '';
-		plusButton.style['background-color'] = '';
-		minusButton.style['background-color'] = 'orange';
-		operatorClicked = true;
-	}
+	firstNumberClicked = true;
+	expression.firstOperand = parseFloat(expression.firstOperandString);
+	expression.operator = 'minus';
+	timesButton.style['background-color'] = '';
+	divideButton.style['background-color'] = '';
+	plusButton.style['background-color'] = '';
+	minusButton.style['background-color'] = 'orange';
+	operatorClicked = true;
 });
 
 signButton.addEventListener('click', () => {
-	if (firstNumberClicked) {
-		expression.firstOperand *= -1;
-		display.value = expression.firstOperand;
-	} else if (firstNumberClicked && operatorClicked && secondNumberClicked) {
-		expression.secondOperand *= -1;
-		display.value = expression.secondOperand;
+	if (!operatorClicked) {
+		expression.firstOperandString *= -1;
+		display.value = expression.firstOperandString;
+	} else {
+		expression.secondOperandString *= -1;
+		display.value = expression.secondOperandString;
 	}
 });
 
 percentButton.addEventListener('click', () => {
-	if (firstNumberClicked) {
-		expression.firstOperand /= 100;
-		display.value = expression.firstOperand;
-	} else if (firstNumberClicked && operatorClicked && secondNumberClicked) {
-		expression.secondOperand /= 100;
-		display.value = expression.secondOperand;
+	if (!operatorClicked) {
+		expression.firstOperandString /= 100;
+		display.value = expression.firstOperandString;
+	} else {
+		expression.secondOperandString /= 100;
+		display.value = expression.secondOperandString;
 	}
 });
 
 equalButton.addEventListener('click', () => {
+	secondNumberClicked = true;
+	expression.secondOperand = parseFloat(expression.secondOperandString);
 	if (firstNumberClicked && operatorClicked && secondNumberClicked) {
 		switch (expression.operator) {
 			case 'times':
@@ -130,7 +129,31 @@ equalButton.addEventListener('click', () => {
 		}
 		display.value = expression.result;
 		expression.firstOperand = expression.result;
+		expression.firstOperandString = expression.result;
+		expression.secondOperandString = '';
 		localStorage.setItem('calcResult', expression.result);
 		secondNumberClicked = false;
+		operatorClicked = false;
+		timesButton.style['background-color'] = '';
+		divideButton.style['background-color'] = '';
+		plusButton.style['background-color'] = '';
+		minusButton.style['background-color'] = '';
 	}
+});
+
+clearButton.addEventListener('click', () => {
+	expression.firstOperand = 0;
+	expression.secondOperand = 0;
+	expression.operator = '';
+	expression.result = 0;
+	expression.firstOperandString = '';
+	expression.secondOperandString = '';
+	firstNumberClicked = false;
+	secondNumberClicked = false;
+	operatorClicked = false;
+	timesButton.style['background-color'] = '';
+	divideButton.style['background-color'] = '';
+	plusButton.style['background-color'] = '';
+	minusButton.style['background-color'] = '';
+	display.value = '';
 });
